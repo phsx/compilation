@@ -7,42 +7,41 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class TabelaDeSimbolos {	
-	 public static void main(String[] args) {
-		 
-			HashMap<String, Integer> tabelaSimbolos = new HashMap<String, Integer>();    
-		    List<ElementoTabelaSimbolo> palavrasReservadas = DefinirPalavrasReservadas();
-		    		    		    
-		    for(int i = 0; i < palavrasReservadas.size(); i++) {
-		    	tabelaSimbolos.put(palavrasReservadas.get(i).lexema, palavrasReservadas.get(i).token.ordinal());
-		    }
-		    
-		   // Integer pos = InserirNaTabela(38, "id123", tabelaSimbolos);
-		    
-		    //System.out.println(pos);	
-		    
-		    System.out.println(PesquisarNaTabela("const", tabelaSimbolos));
-		    
-		    //System.out.println(tabelaSimbolos);
-		    
-	 }
+	
+	HashMap<String, Integer> tabelaSimbolos;
+	List<ElementoTabelaSimbolo> palavrasReservadas;
+	
+	public TabelaDeSimbolos() {
+		
+		this.tabelaSimbolos = new HashMap<String, Integer>();
+		this.palavrasReservadas = DefinirPalavrasReservadas();
+		
+		for(int i = 0; i < palavrasReservadas.size(); i++) {
+	    	tabelaSimbolos.put(palavrasReservadas.get(i).lexema, palavrasReservadas.get(i).token.ordinal());
+	    }
+		
+		// Integer pos = InserirNaTabela(38, "id123", tabelaSimbolos);	    
+	    //System.out.println(pos);   
+	    //System.out.println(tabelaSimbolos);
+	}	 
 	 	 
-	 private static Integer InserirNaTabela(Integer id, String lexema, HashMap<String, Integer> tabelaSimbolos) {
-		 tabelaSimbolos.put(lexema, id);
+	 public Integer InserirNaTabela(Token token, String lexema) {
+		 
+		 tabelaSimbolos.put(lexema, token.ordinal());
 		 return tabelaSimbolos.get(lexema);
 	 }
 	 
-	 private static Integer PesquisarNaTabela(String lexema, HashMap<String, Integer> tabelaSimbolos) {
+	 public Integer PesquisarNaTabela(String lexema) {
+		 
 		 if(tabelaSimbolos.get(lexema) != null)
 			 return tabelaSimbolos.get(lexema);
 		 else 
-			 return Token.ERRO.ordinal();
-	 }
-	 
+			 return null;
+	 }	 
 	 
 	 private static List<ElementoTabelaSimbolo> DefinirPalavrasReservadas(){
 		 
-		 List<ElementoTabelaSimbolo> tabelaSimbolos = new ArrayList<>();	
-		 
+		 List<ElementoTabelaSimbolo> tabelaSimbolos = new ArrayList<>();			 
 		 
 		 tabelaSimbolos.add(new ElementoTabelaSimbolo(Token.CONST, "const"));
 		 tabelaSimbolos.add(new ElementoTabelaSimbolo(Token.INTEGER, "integer"));

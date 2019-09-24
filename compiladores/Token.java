@@ -1,7 +1,10 @@
 package compiladores;
 
 public enum Token {
+	
 	ERRO(0),
+	ID(1),
+	CONSTANTE(2),
 	CONST(1),
 	INTEGER(2),
 	BYTE(3),
@@ -12,8 +15,8 @@ public enum Token {
 	AND(8),
 	OR(9),
 	NOT(10),
-	IGUAL(11),
-	ATRIBUICAO(12),
+	ATRIBUICAO(11),
+	IGUAL(12),	
 	ABRE_PARENTESES(13),
 	FECHA_PARENTESES(14),
 	MENOR_QUE(15),
@@ -36,7 +39,8 @@ public enum Token {
 	WRITELN(32),
 	TRUE(33),
 	FALSE(34),
-	BOOLEAN(35);
+	BOOLEAN(35),
+	EOF(36);
 	
 	public final Integer indice;
 	
