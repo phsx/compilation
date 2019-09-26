@@ -6,6 +6,7 @@ public class AnalisadorLexico {
 	int estadoFinal;
 	int estadoAtual;
 	int linha;
+	int pos;
 	String lexema;
 	RegistroLexico registroLexico;
 	TabelaDeSimbolos tabelaSimbolos;
@@ -41,22 +42,30 @@ public class AnalisadorLexico {
 	}	
 
 	
-	public void Analisar(String t){
+	public String Analisar(String t){
 		
 		int i=0;
 		char c;
+		estadoAtual = 0;
+		pos = 0;
+		lexema = "";
 		
 		while(estadoAtual != estadoFinal){
 			
 			c = t.charAt(i);
+			//System.out.print(c);
+			pos++;
 			if(c == 10) linha++;
+			
+			if(c == 0) return "";
+			
 			if(!caracterValido(c)) {
 				System.out.println(linha+":caractere invalido.");
 				break;
 			}
 			
 			switch (estadoAtual) {
-			
+				
 				case 0:
 					
 					estadoAtual = Caso_0(c);
@@ -136,10 +145,18 @@ public class AnalisadorLexico {
 					 
 					 estadoAtual = Caso_16(c);
 					 break;
+					 
+				 default: 
+					 pos--;
 			}
 			
-			i++;
+			i++;			
 		}
+		return CodigoRestante(t, pos);
+	}
+	
+	public String CodigoRestante(String codigoFonte, int tamLexema) {
+		return codigoFonte.substring(tamLexema, codigoFonte.length());
 	}
 	
 	public int Caso_0(char c) {		
@@ -244,9 +261,9 @@ public class AnalisadorLexico {
         		tabelaSimbolos.InserirNaTabela(Token.ID, lexema);
         	
         	registroLexico = new RegistroLexico(Token.ID, lexema, tabelaSimbolos.PesquisarNaTabela(lexema), null);
+        	Devolve();
         	
-            return estadoFinal;
-            //devolve
+            return estadoFinal;            
         }
     }
 	
@@ -261,8 +278,8 @@ public class AnalisadorLexico {
         	
         	registroLexico = new RegistroLexico(Token.CONSTANTE, lexema, null, TipoConstante.INTEIRO);
         	
-            return estadoFinal;            
-            //devolve
+        	Devolve();
+            return estadoFinal;
         }
     }
 	
@@ -281,9 +298,9 @@ public class AnalisadorLexico {
         else{
         	
         	registroLexico = new RegistroLexico(Token.CONSTANTE, lexema, null, TipoConstante.INTEIRO);
+        	Devolve();
         	
             return estadoFinal;
-            //devolve
         }  
 	}
 	
@@ -313,15 +330,15 @@ public class AnalisadorLexico {
 	
 	public int Caso_7(char c) {
 		
-		if(c != 10 ||c != 26 ){ // Verificar se é \n ou EOF
-            lexema += c;
-            return 7;
-        }
-		
-        else if(c == 39){ //Aspas Simples
+		if(c == 39){ //Aspas Simples
             lexema += c;
             return 8;
-        } 
+        }
+		
+		if(c != 10 ||c != 26 || c != 39){ // Verificar se é \n ou EOF
+            lexema += c;
+            return 7;
+        }		 
 		
 		return -1;  
     }
@@ -332,9 +349,9 @@ public class AnalisadorLexico {
 		if(c != 39){  //Aspas Simples
 			
 			registroLexico = new RegistroLexico(Token.CONSTANTE, lexema, null, TipoConstante.STRING);
+			Devolve();
 			
             return estadoFinal;
-            //devolve; 
         }
 		
         else if(c == 39){ //Aspas Simples
@@ -358,9 +375,9 @@ public class AnalisadorLexico {
         else if(c != '='){      
         	
         	registroLexico = new RegistroLexico(Token.ATRIBUICAO, lexema, null, null);
+        	Devolve();
+        	
             return estadoFinal;
-            
-            //devolve
         } 
 		
 		return -1;  
@@ -368,14 +385,14 @@ public class AnalisadorLexico {
 	
 	public int Caso_10(char c) {
 		
-		if(c != '/'){  
+		if(c != '/' && c != '*'){  
 			
 			registroLexico = new RegistroLexico(Token.DIVISAO, lexema, null, null);
+			Devolve();
 			
             return estadoFinal;
-            //devolve
-        }
-		
+        }		
+
         else if(c == '*'){
             return 11;
         } 
@@ -385,7 +402,7 @@ public class AnalisadorLexico {
 	
 	public int Caso_11(char c) {
 		
-		if(c != 26){  //EOF
+		if(c != 26 && c != '*'){  //EOF
             return 11;
         }
 		
@@ -402,7 +419,8 @@ public class AnalisadorLexico {
 		if(c == '*'){  
             return 11;
         }
-        else if(c == '/'){
+        
+		if(c == '/'){
             return 0;
         }
 		
@@ -425,8 +443,9 @@ public class AnalisadorLexico {
         else if(c != '='){
         	
         	registroLexico = new RegistroLexico(Token.MENOR_OU_IGUAL_QUE, lexema, null, null);
+        	Devolve();
+        	
             return estadoFinal;
-            //devolve
         } 
 		
 		return -1;  
@@ -458,13 +477,17 @@ public class AnalisadorLexico {
         else if(c != '='){
         	
         	registroLexico = new RegistroLexico(Token.MAIOR_OU_IGUAL_QUE, lexema, null, null);
+        	Devolve();
+        	
             return estadoFinal;
-            //devolve
         } 
 		
 		return -1;  
-	}
+	}	
 	
+	public void Devolve() {
+		pos--;
+	}
 
 	public RegistroLexico InserirRegistroLexicoPorCaracterer(char c) {
 		

@@ -1,14 +1,40 @@
 package compiladores;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 public class Principal {
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException{
 		
-		AnalisadorLexico analisador = new AnalisadorLexico(1);
+	    Path wiki_path = Paths.get("C:/Users/Pedro/eclipse-workspace/compiladores/src/compiladores/", "exemplo.l");
+	    
+		AnalisadorLexico analisadorLexico = new AnalisadorLexico(1);
 		
-		// precisa ler o arquivo fonte e passar para o analisador lexico
-		// o devolver ainda precisa ser desenvolvido
+		byte[] wikiArray = Files.readAllBytes(wiki_path); //lendo o arquivo
+		byte[] codigoFonte = new byte[wikiArray.length]; //vetor de byte para retirar o '\r' da string
 		
-		analisador.Analisar("id1a3= \n aaç");
-		System.out.println(analisador.registroLexico.lexema);
+		int j = 0;
+		for(int i = 0; i<wikiArray.length;i++) {
+			if(wikiArray[i] != 13) { // caracter \r
+				codigoFonte[j] = wikiArray[i];
+				j++;
+			}
+		}
+		
+	    String codigo = new String(codigoFonte, "ASCII");
+		
+		int o = 0;
+		try {
+		while(!codigo.isEmpty()) {
+			System.out.println(codigo);
+			codigo = analisadorLexico.Analisar(codigo);
+			//System.out.println("---->"+analisadorLexico.registroLexico.lexema);
+			o++;
+		}
+		}catch(StringIndexOutOfBoundsException e) {
+			
+		}
 	}	
 }

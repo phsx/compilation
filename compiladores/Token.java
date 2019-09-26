@@ -40,7 +40,8 @@ public enum Token {
 	TRUE(33),
 	FALSE(34),
 	BOOLEAN(35),
-	EOF(36);
+	EOF(36),
+	QUEBRA_LINHA(37);
 	
 	public final Integer indice;
 	

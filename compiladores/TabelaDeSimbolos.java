@@ -78,6 +78,7 @@ public class TabelaDeSimbolos {
 		 tabelaSimbolos.add(new ElementoTabelaSimbolo(Token.TRUE, "true"));
 		 tabelaSimbolos.add(new ElementoTabelaSimbolo(Token.FALSE, "false"));
 		 tabelaSimbolos.add(new ElementoTabelaSimbolo(Token.BOOLEAN, "boolean"));
+		 tabelaSimbolos.add(new ElementoTabelaSimbolo(Token.QUEBRA_LINHA, "\n"));
 		 
 		 return tabelaSimbolos;
 	 }
